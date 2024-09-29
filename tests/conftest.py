@@ -7,25 +7,37 @@ from Diplom_1.praktikum.burger import Burger
 from Diplom_1.praktikum.ingredient import Ingredient
 
 
+# Фикстура для булочки
 @pytest.fixture
-def burger_fixture():
-    # Создаем экземпляры необходимых объектов
+def bun_fixture():
     mock_bun = Mock(spec=Bun)
     mock_bun.get_name.return_value = MockBurger.BUN_NAME
     mock_bun.get_price.return_value = MockBurger.BUN_PRICE
+    return mock_bun
 
-    mock_ingredient = Mock(spec=Ingredient)
-    mock_ingredient.get_price.return_value = MockBurger.INGREDIENT_PRICE
-    mock_ingredient.get_name.return_value = MockBurger.INGREDIENT_NAME
-    mock_ingredient.get_type.return_value = MockBurger.INGREDIENT_TYPE
+# Фикстура для начинок
+@pytest.fixture
+def filling_fixture():
+    mock_filling = Mock(spec=Ingredient)
+    mock_filling.get_price.return_value = MockBurger.FILLING_PRICE
+    mock_filling.get_name.return_value = MockBurger.FILLING_NAME
+    mock_filling.get_type.return_value = MockBurger.FILLING_TYPE
+    return mock_filling
 
-    another_mock_ingredient = Mock(spec=Ingredient)
-    another_mock_ingredient.get_price.return_value = MockBurger.ANOTHER_INGREDIENT_PRICE
-    another_mock_ingredient.get_name.return_value = MockBurger.ANOTHER_INGREDIENT_NAME
-    another_mock_ingredient.get_type.return_value = MockBurger.ANOTHER_INGREDIENT_TYPE
+# Фикстура для соуса
+@pytest.fixture
+def sauce_fixture():
+    mock_sauce = Mock(spec=Ingredient)
+    mock_sauce.get_price.return_value = MockBurger.SAUCE_PRICE
+    mock_sauce.get_name.return_value = MockBurger.SAUCE_NAME
+    mock_sauce.get_type.return_value = MockBurger.SAUCE_TYPE
+    return mock_sauce
 
-    # Инициализируем бургер с булочкой
+    # Фикстура для бургера с булочкой
+@pytest.fixture
+def burger_fixture(bun_fixture, filling_fixture, sauce_fixture):
     burger = Burger()
-    burger.set_buns(mock_bun)
-
-    return burger, mock_ingredient, another_mock_ingredient, mock_bun
+    burger.set_buns(bun_fixture)
+    burger.add_ingredient(filling_fixture)
+    burger.add_ingredient(sauce_fixture)
+    return burger
